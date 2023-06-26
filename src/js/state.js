@@ -15,6 +15,8 @@ const s = {
   backgroundColor: '#345334',
   size: 85,
   stackedSize: 60,
+  stackedHorizontal: 0,
+  stackedVertical: 0,
   icon: heart_icon,
   stackedIcon: heart_icon,
   stackedSelected: false,

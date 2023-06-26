@@ -51,7 +51,9 @@ function draw() {
       ctx.save();
       setFont(s.stackedIcon, s.stackedSize);
       ctx.globalCompositeOperation = 'xor';
-      ctx.fillText(s.stackedIcon.uc, canvasSize / 2, canvasSize / 2);
+      const x = canvasSize / 2 + s.stackedHorizontal;
+      const y = canvasSize / 2 + s.stackedVertical;
+      ctx.fillText(s.stackedIcon.uc, x, y);
       ctx.restore();
     }
     canvasToFavicon(canvas);

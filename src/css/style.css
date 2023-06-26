@@ -201,14 +201,18 @@ input:focus {
 }
 
 #size,
-#stacked_size {
+#stacked_size,
+#stacked_horizontal,
+#stacked_vertical {
   padding-left: 0;
   border: none;
   color: white;
 }
 
 #size:focus,
-#stacked_size:focus {
+#stacked_size:focus,
+#stacked_horizontal:focus,
+#stacked_vertical:focus {
   box-shadow: none;
 }
 
@@ -310,10 +314,11 @@ input:focus {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  height: 30px;
 }
 
-#stack_input {
+#stack_input,
+#stacked_horizontal_container,
+#stacked_vertical_container {
   display: flex;
   align-items: center;
   color: #ff3860;
@@ -336,7 +341,8 @@ input:focus {
   font-size: 16px;
 }
 
-#stacked_size {
+#stacked_size,
+#stacked_alignment {
   display: none;
   margin-bottom: 0;
 }
