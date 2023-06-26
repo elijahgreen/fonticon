@@ -342,7 +342,8 @@ input:focus {
 }
 
 #stacked_size,
-#stacked_alignment {
+#stacked_alignment,
+#stacked_size_value {
   display: none;
   margin-bottom: 0;
 }

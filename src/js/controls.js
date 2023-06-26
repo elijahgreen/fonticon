@@ -73,6 +73,7 @@ function initControls(state) {
   const $stackedAlignment = $('#stacked_alignment');
   const $horizontalValue = $('#horizontal_value');
   const $verticalValue = $('#vertical_value');
+  const $stackedSizeValue = $('#stacked_size_value');
   const $stacked = $('#stacked');
   const $stackInput = $('#stack_input');
 
@@ -83,6 +84,7 @@ function initControls(state) {
 
   $stackedSize.on('input', () => {
     state.stackedSize = $stackedSize.val();
+    $stackedSizeValue.text(state.stackedSize);
     draw();
   });
 
@@ -102,6 +104,7 @@ function initControls(state) {
     state.stackedSelected = !state.stackedSelected;
     state.stackedSelected ? $stackedSize.show() : $stackedSize.hide();
     state.stackedSelected ? $stackedAlignment.show() : $stackedAlignment.hide();
+    state.stackedSelected ? $stackedSizeValue.show() : $stackedSizeValue.hide();
     $stacked.toggleClass('fa-square fa-check-square');
     draw();
   });
@@ -110,6 +113,9 @@ function initControls(state) {
   $stackedSize.val(state.stackedSize);
   $stackedHorizontal.val(state.stackedHorizontal);
   $stackedVertical.val(state.$stackedVertical);
+  $stackedSizeValue.text(state.stackedSize);
+  $horizontalValue.text(state.stackedHorizontal);
+  $verticalValue.text(state.stackedVertical);
   $stacked.attr('checked', state.stackedSelected);
 }
 
