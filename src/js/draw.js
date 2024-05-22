@@ -35,25 +35,41 @@ function setFont(icon, size) {
   ctx.font = fontWeight + ' ' + (icon.si * size) / 100 + 'px "Font Awesome 5 ' + fontSuffix + '"';
 }
 
+function fillText(text, horizontalOffset = 0, verticalOffset = 0) {
+  const textMetrics = ctx.measureText(text);
+  const horizontalAdjustment = (textMetrics.actualBoundingBoxLeft - textMetrics.actualBoundingBoxRight) / 2;
+  const verticalAdjustment = (textMetrics.actualBoundingBoxAscent - textMetrics.actualBoundingBoxDescent) / 2;
+  const horizontalCenter = canvasSize / 2 + (horizontalAdjustment + horizontalOffset);
+  const verticalCenter = canvasSize / 2 + (verticalAdjustment + verticalOffset);
+
+  ctx.fillText(text, horizontalCenter, verticalCenter);
+}
+
 function draw() {
   if (canvasSize > 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = s.backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setFont(s.icon, s.size);
+
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillText(s.icon.uc, canvasSize / 2, canvasSize / 2);
+    fillText(s.icon.uc);
+
     ctx.fillStyle = s.foregroundColor;
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillText(s.icon.uc, canvasSize / 2, canvasSize / 2);
+    fillText(s.icon.uc);
+
     if (s.stackedSelected) {
       ctx.save();
+
       setFont(s.stackedIcon, s.stackedSize);
       ctx.globalCompositeOperation = 'xor';
-      const x = canvasSize / 2 + s.stackedHorizontal;
-      const y = canvasSize / 2 + s.stackedVertical;
-      ctx.fillText(s.stackedIcon.uc, x, y);
+      // const x = canvasSize / 2 + s.stackedHorizontal;
+      //const y = canvasSize / 2 + s.stackedVertical;
+      //ctx.fillText(s.stackedIcon.uc, x, y);
+      fillText(s.stackedIcon.uc, s.stackedHorizontal, s.stackedVertical);
+
       ctx.restore();
     }
     canvasToFavicon(canvas);

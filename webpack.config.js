@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -19,7 +19,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    contentBase: 'dist',
+    static: 'dist',
   },
   module: {
     rules: [
@@ -29,18 +29,15 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              emitFile: true,
-            },
-          },
-        ],
+        type: 'asset/resource',
       },
     ],
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+  },
+  stats: {
+    modules: true,
   },
 };

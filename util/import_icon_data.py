@@ -1,10 +1,4 @@
-import urllib.request
 import json
-import urllib.parse
-import tinycss2
-import os
-import io
-import sys
 import tempfile
 from git import Repo
 
@@ -18,37 +12,43 @@ def get_font(fonts, style):
     if style in fonts.keys():
         return fonts[style]
     else:
-        print("Warning: style {0} unkown.".format(style))
+        print(f"Warning: style {style} unkown.")
 
 
 def get_max_size(font, icon):
     font_size = 1200
-    max_size = 1024
+    max_size = 960
     width = max_size + 1
     height = max_size + 1
 
     # todo implement binary search
     while width >= max_size or height >= max_size:
-        font_size -= 10
+        font_size -= 20
         f = ImageFont.truetype(font, font_size)
-        width, height = f.getsize(icon)
+        l, u, r, b = f.getbbox(icon)
+        width = r - l
+        height = b - u
 
     if width > 0:
         while width < max_size and height < max_size:
             font_size += 1
             f = ImageFont.truetype(font, font_size)
-            width, height = f.getsize(icon)
+            l, u, r, b = f.getbbox(icon)
+            width = r - l
+            height = b - u
+
     return font_size
 
 
 def load_icons(repo_url, output_path, allow_brands):
-    with tempfile.TemporaryDirectory() as repo_dir:
+    with tempfile.TemporaryDirectory(delete=False) as repo_dir:
+        print(f"writing to: {repo_dir}")
         Repo.clone_from(repo_url, repo_dir)
         fonts = {
-            "brands": {"path": repo_dir + "/webfonts/fa-brands-400.woff", "style": "fab"},
-            "light": {"path": repo_dir + "/webfonts/fa-light-300.woff", "style": "fal"},
-            "regular": {"path": repo_dir + "/webfonts/fa-regular-400.woff", "style": "far"},
-            "solid": {"path": repo_dir + "/webfonts/fa-solid-900.woff", "style": "fas"},
+            "brands": {"path": repo_dir + "/webfonts/fa-brands-400.woff2", "style": "fab"},
+            "light": {"path": repo_dir + "/webfonts/fa-light-300.woff2", "style": "fal"},
+            "regular": {"path": repo_dir + "/webfonts/fa-regular-400.woff2", "style": "far"},
+            "solid": {"path": repo_dir + "/webfonts/fa-solid-900.woff2", "style": "fas"},
         }
 
         with open(repo_dir + "/metadata/icons.json") as f:
@@ -63,7 +63,7 @@ def load_icons(repo_url, output_path, allow_brands):
                         font = get_font(fonts, style)
 
                         pr = "f" if style in icon["free"] else "t"
-                        uni = ("\\u" + icon["unicode"]).encode().decode("unicode-escape")
+                        uni = chr(int(icon["unicode"], 16))
                         result_icon = {
                             "ix": idx,
                             "id": icon_name,
@@ -77,9 +77,9 @@ def load_icons(repo_url, output_path, allow_brands):
                             result_icon["se"] = search_terms
                         result.append(result_icon)
                         idx += 1
-            print("{0}/{1} icons processed.".format(i + 1, len(icons_json)), end="\r")
+            print(f"{i + 1}/{len(icons_json)} icons processed.", end="\r")
 
-        print("{0}/{1} icons processed.".format(len(icons_json), len(icons_json)))
+        print(f"{len(icons_json)}/{len(icons_json)}")
         js_icons = "export default " + json.dumps(result, separators=(",", ":"))
 
         with open(output_path, "w") as f:
